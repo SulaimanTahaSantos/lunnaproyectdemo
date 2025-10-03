@@ -11,7 +11,7 @@ export async function GET() {
         image: true,
         _count: {
           select: {
-            therapistSessions: true, // Contar sesiones como terapeuta
+            therapistSessions: true, 
           },
         },
       },

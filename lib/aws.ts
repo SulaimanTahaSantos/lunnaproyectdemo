@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 
-// Configurar AWS S3
+
 const s3 = new AWS.S3({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -15,7 +15,6 @@ export async function uploadToS3(
   contentType: string
 ): Promise<string> {
   try {
-    // Validar configuración
     if (
       !process.env.AWS_ACCESS_KEY_ID ||
       !process.env.AWS_SECRET_ACCESS_KEY ||
@@ -40,7 +39,7 @@ export async function uploadToS3(
       Key: `avatars/${Date.now()}-${fileName}`,
       Body: file,
       ContentType: contentType,
-      ACL: "public-read", // Para que sea accesible públicamente
+      ACL: "public-read", 
     };
 
     console.log("Upload params:", {
@@ -60,9 +59,8 @@ export async function uploadToS3(
 
 export async function deleteFromS3(fileUrl: string): Promise<void> {
   try {
-    // Extraer la key del URL
     const urlParts = fileUrl.split("/");
-    const key = urlParts.slice(3).join("/"); // Remover https://bucket.s3.region.amazonaws.com/
+    const key = urlParts.slice(3).join("/"); 
 
     const deleteParams = {
       Bucket: BUCKET_NAME,
@@ -76,7 +74,6 @@ export async function deleteFromS3(fileUrl: string): Promise<void> {
   }
 }
 
-// Generar URL presignada para upload directo desde el cliente
 export function generatePresignedUrl(
   fileName: string,
   contentType: string
@@ -87,7 +84,7 @@ export function generatePresignedUrl(
     Key: key,
     ContentType: contentType,
     ACL: "public-read",
-    Expires: 300, // 5 minutos
+    Expires: 300, 
   };
 
   return s3.getSignedUrlPromise("putObject", params);

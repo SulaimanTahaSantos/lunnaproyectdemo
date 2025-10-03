@@ -15,7 +15,6 @@ export async function GET(req: Request) {
     let sessions;
 
     if (role === "THERAPIST") {
-      // Si es terapeuta, obtener sesiones donde es el terapeuta
       sessions = await prisma.session.findMany({
         where: { therapistId: userId },
         include: {
@@ -29,7 +28,6 @@ export async function GET(req: Request) {
         orderBy: { date: "asc" },
       });
     } else {
-      // Si es usuario, obtener sesiones donde es el usuario
       sessions = await prisma.session.findMany({
         where: { userId },
         include: {

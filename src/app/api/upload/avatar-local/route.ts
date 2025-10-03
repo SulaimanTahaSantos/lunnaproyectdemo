@@ -47,14 +47,12 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Convertir archivo a Buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Guardar localmente en public/uploads
     const fileName = `${Date.now()}-${file.name}`;
     const filePath = path.join(process.cwd(), "public/uploads", fileName);
-    // Crear directorio si no existe
+    
     const dir = path.dirname(filePath);
     try {
       await writeFile(filePath, buffer);
@@ -66,10 +64,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // URL local
     const imageUrl = `/uploads/${fileName}`;
 
-    // Actualizar URL de imagen en la base de datos
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { image: imageUrl },

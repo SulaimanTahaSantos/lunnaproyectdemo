@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validar tipo de archivo
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
     if (!allowedTypes.includes(file.type)) {
       return new Response(
@@ -26,8 +25,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validar tamaño (máximo 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024; 
     if (file.size > maxSize) {
       return new Response(
         JSON.stringify({ error: "El archivo es demasiado grande. Máximo 5MB" }),
@@ -35,7 +33,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Verificar que el usuario existe
     const user = await prisma.user.findUnique({
       where: { id: userId },
     });
@@ -46,14 +43,11 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Convertir archivo a Buffer
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Subir a S3
     const imageUrl = await uploadToS3(buffer, file.name, file.type);
 
-    // Actualizar URL de imagen en la base de datos
     const updatedUser = await prisma.user.update({
       where: { id: userId },
       data: { image: imageUrl },
