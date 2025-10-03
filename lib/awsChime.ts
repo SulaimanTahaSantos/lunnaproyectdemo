@@ -1,6 +1,5 @@
 import AWS from "aws-sdk";
 
-// Validate environment variables
 const AWS_REGION = process.env.AWS_REGION;
 const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 const AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY;
@@ -23,7 +22,7 @@ export async function createMeeting(clientRequestId: string) {
   const meeting = await chime
     .createMeeting({
       ClientRequestToken: clientRequestId,
-      ExternalMeetingId: clientRequestId, // Required property
+      ExternalMeetingId: clientRequestId, 
       MediaRegion: AWS_REGION as string,
     })
     .promise();
@@ -39,7 +38,7 @@ export async function createAttendee(
   const attendee = await chime
     .createAttendee({
       MeetingId: meetingId,
-      ExternalUserId: externalUserId, // normalmente el ID del usuario en tu app
+      ExternalUserId: externalUserId, 
     })
     .promise();
 

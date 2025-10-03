@@ -12,7 +12,6 @@ export async function DELETE(req: Request) {
       );
     }
 
-    // Verificar que la sesión existe y pertenece al usuario
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
       include: {
@@ -27,7 +26,6 @@ export async function DELETE(req: Request) {
       });
     }
 
-    // Verificar que el usuario tiene permiso para cancelar
     if (session.userId !== userId && session.therapistId !== userId) {
       return new Response(
         JSON.stringify({
@@ -37,7 +35,6 @@ export async function DELETE(req: Request) {
       );
     }
 
-    // Eliminar la sesión
     await prisma.session.delete({
       where: { id: sessionId },
     });

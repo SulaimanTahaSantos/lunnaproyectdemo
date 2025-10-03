@@ -1,4 +1,3 @@
-// src/app/api/auth/login/route.ts
 import { prisma } from "../../../../../lib/prisma";
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
@@ -15,7 +14,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Buscar usuario
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -26,7 +24,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Verificar contraseña
     const isValid = await compare(password, user.password);
     if (!isValid) {
       return new Response(JSON.stringify({ error: "Credenciales inválidas" }), {
@@ -34,7 +31,6 @@ export async function POST(req: Request) {
       });
     }
 
-    // Crear token JWT
     const secretKey = process.env.NEXTAUTH_SECRET || "fallback-secret-key";
 
     const token = sign(
@@ -43,17 +39,16 @@ export async function POST(req: Request) {
         email: user.email,
         role: user.role,
         name: user.name,
-        iat: Math.floor(Date.now() / 1000), // Issued at
+        iat: Math.floor(Date.now() / 1000), 
       },
       secretKey,
       {
-        expiresIn: "24h", // Token expira en 24 horas
+        expiresIn: "24h",
         issuer: "lunna-platform",
         subject: user.id,
       }
     );
 
-    // Login exitoso con JWT
     return new Response(
       JSON.stringify({
         message: "Login exitoso",
@@ -71,7 +66,6 @@ export async function POST(req: Request) {
       {
         status: 200,
         headers: {
-          // Opcional: También establecer como cookie httpOnly
           "Set-Cookie": `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400; Path=/`,
         },
       }

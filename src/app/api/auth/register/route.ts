@@ -6,7 +6,6 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { name, email, password, role } = body;
 
-    // Validaciones
     if (!name || !email || !password) {
       return new Response(
         JSON.stringify({ error: "Nombre, email y contraseña son requeridos" }),
@@ -23,7 +22,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verificar si el email ya existe
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -35,16 +33,14 @@ export async function POST(req: Request) {
       );
     }
 
-    // Hash de la contraseña
     const hashedPassword = await hash(password, 12);
 
-    // Crear usuario
     const user = await prisma.user.create({
       data: {
         name,
         email,
         password: hashedPassword,
-        role: role || "USER", // Por defecto USER
+        role: role || "USER", 
       },
       select: {
         id: true,

@@ -51,7 +51,6 @@ export async function POST(req: Request) {
     );
     const userAttendee = await createAttendee(meeting.MeetingId, userId);
 
-    // Guardar en la base de datos
     const session = await prisma.session.create({
       data: {
         therapistId,

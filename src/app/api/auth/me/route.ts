@@ -3,14 +3,11 @@ import { prisma } from "../../../../../lib/prisma";
 
 export async function GET(req: Request) {
   try {
-    // Verificar JWT
     const authResult = await requireAuthJWT(req);
-    // Si es una Response, significa que hay error de auth
     if (authResult instanceof Response) {
       return authResult;
     }
 
-    // Obtener datos frescos del usuario desde la BD
     const user = await prisma.user.findUnique({
       where: { id: authResult.userId },
       select: {
