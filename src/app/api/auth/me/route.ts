@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// src/app/api/auth/me/route.ts
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import { requireAuthJWT } from "../../../../../lib/auth-jwt";
 import { prisma } from "../../../../../lib/prisma";
 
@@ -5,7 +9,11 @@ export async function GET(req: Request) {
   try {
     // Verificar JWT
     const authResult = await requireAuthJWT(req);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
     // Si es una Response, significa que hay error de auth
     if (authResult instanceof Response) {
       return authResult;
@@ -30,9 +38,16 @@ export async function GET(req: Request) {
     });
 
     if (!user) {
+<<<<<<< HEAD
       return new Response(JSON.stringify({ error: "Usuario no encontrado" }), {
         status: 404,
       });
+=======
+      return new Response(
+        JSON.stringify({ error: "Usuario no encontrado" }),
+        { status: 404 }
+      );
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
     }
 
     return new Response(
@@ -55,4 +70,8 @@ export async function GET(req: Request) {
       status: 500,
     });
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4

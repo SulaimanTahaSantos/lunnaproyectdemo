@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// src/app/api/sessions/cancel/route.ts
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import { prisma } from "../../../../../lib/prisma";
 
 export async function DELETE(req: Request) {
@@ -22,17 +26,28 @@ export async function DELETE(req: Request) {
     });
 
     if (!session) {
+<<<<<<< HEAD
       return new Response(JSON.stringify({ error: "Sesión no encontrada" }), {
         status: 404,
       });
+=======
+      return new Response(
+        JSON.stringify({ error: "Sesión no encontrada" }),
+        { status: 404 }
+      );
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
     }
 
     // Verificar que el usuario tiene permiso para cancelar
     if (session.userId !== userId && session.therapistId !== userId) {
       return new Response(
+<<<<<<< HEAD
         JSON.stringify({
           error: "No tienes permiso para cancelar esta sesión",
         }),
+=======
+        JSON.stringify({ error: "No tienes permiso para cancelar esta sesión" }),
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
         { status: 403 }
       );
     }
@@ -55,4 +70,8 @@ export async function DELETE(req: Request) {
       status: 500,
     });
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// lib/aws.ts
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import AWS from "aws-sdk";
 
 // Configurar AWS S3
@@ -16,11 +20,15 @@ export async function uploadToS3(
 ): Promise<string> {
   try {
     // Validar configuración
+<<<<<<< HEAD
     if (
       !process.env.AWS_ACCESS_KEY_ID ||
       !process.env.AWS_SECRET_ACCESS_KEY ||
       !process.env.AWS_REGION
     ) {
+=======
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION) {
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
       throw new Error("Credenciales AWS no configuradas");
     }
 
@@ -43,11 +51,15 @@ export async function uploadToS3(
       ACL: "public-read", // Para que sea accesible públicamente
     };
 
+<<<<<<< HEAD
     console.log("Upload params:", {
       bucket: uploadParams.Bucket,
       key: uploadParams.Key,
       contentType: uploadParams.ContentType,
     });
+=======
+    console.log("Upload params:", { bucket: uploadParams.Bucket, key: uploadParams.Key, contentType: uploadParams.ContentType });
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 
     const result = await s3.upload(uploadParams).promise();
     console.log("Upload successful:", result.Location);
@@ -82,7 +94,11 @@ export function generatePresignedUrl(
   contentType: string
 ): Promise<string> {
   const key = `avatars/${Date.now()}-${fileName}`;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
   const params = {
     Bucket: BUCKET_NAME,
     Key: key,
@@ -92,4 +108,8 @@ export function generatePresignedUrl(
   };
 
   return s3.getSignedUrlPromise("putObject", params);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4

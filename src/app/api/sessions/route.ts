@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// src/app/api/sessions/route.ts
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import { prisma } from "../../../../lib/prisma";
 
 export async function GET(req: Request) {
@@ -7,9 +11,16 @@ export async function GET(req: Request) {
     const role = searchParams.get("role");
 
     if (!userId) {
+<<<<<<< HEAD
       return new Response(JSON.stringify({ error: "userId es requerido" }), {
         status: 400,
       });
+=======
+      return new Response(
+        JSON.stringify({ error: "userId es requerido" }),
+        { status: 400 }
+      );
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
     }
 
     let sessions;
@@ -51,4 +62,8 @@ export async function GET(req: Request) {
       status: 500,
     });
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4

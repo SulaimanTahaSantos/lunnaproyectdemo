@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// lib/awsChime.ts
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import AWS from "aws-sdk";
 
 // Validate environment variables
@@ -20,7 +24,11 @@ export async function createMeeting(clientRequestId: string) {
   if (!AWS_REGION) {
     throw new Error("AWS_REGION is required");
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
   const meeting = await chime
     .createMeeting({
       ClientRequestToken: clientRequestId,

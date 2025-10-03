@@ -18,4 +18,8 @@ export async function GET() {
       status: 500,
     });
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4

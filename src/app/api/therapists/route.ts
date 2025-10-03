@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+// src/app/api/therapists/route.ts
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import { prisma } from "../../../../lib/prisma";
 
 export async function GET() {
@@ -25,4 +29,8 @@ export async function GET() {
       status: 500,
     });
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
