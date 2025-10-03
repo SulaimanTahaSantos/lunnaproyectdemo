@@ -21,44 +21,24 @@ export async function POST(req: Request) {
     });
 
     if (!user) {
-<<<<<<< HEAD
       return new Response(JSON.stringify({ error: "Credenciales inválidas" }), {
         status: 401,
       });
-=======
-      return new Response(
-        JSON.stringify({ error: "Credenciales inválidas" }),
-        { status: 401 }
-      );
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
     }
 
     // Verificar contraseña
     const isValid = await compare(password, user.password);
     if (!isValid) {
-<<<<<<< HEAD
       return new Response(JSON.stringify({ error: "Credenciales inválidas" }), {
         status: 401,
       });
-=======
-      return new Response(
-        JSON.stringify({ error: "Credenciales inválidas" }),
-        { status: 401 }
-      );
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
     }
 
     // Crear token JWT
     const secretKey = process.env.NEXTAUTH_SECRET || "fallback-secret-key";
-<<<<<<< HEAD
 
     const token = sign(
       {
-=======
-    
-    const token = sign(
-      { 
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
         userId: user.id,
         email: user.email,
         role: user.role,
@@ -66,11 +46,7 @@ export async function POST(req: Request) {
         iat: Math.floor(Date.now() / 1000), // Issued at
       },
       secretKey,
-<<<<<<< HEAD
       {
-=======
-      { 
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
         expiresIn: "24h", // Token expira en 24 horas
         issuer: "lunna-platform",
         subject: user.id,
@@ -92,21 +68,12 @@ export async function POST(req: Request) {
         expiresIn: "24h",
         tokenType: "Bearer",
       }),
-<<<<<<< HEAD
       {
         status: 200,
         headers: {
           // Opcional: También establecer como cookie httpOnly
           "Set-Cookie": `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400; Path=/`,
         },
-=======
-      { 
-        status: 200,
-        headers: {
-          // Opcional: También establecer como cookie httpOnly
-          'Set-Cookie': `token=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=86400; Path=/`
-        }
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
       }
     );
   } catch (err: any) {
@@ -115,8 +82,4 @@ export async function POST(req: Request) {
       status: 500,
     });
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4

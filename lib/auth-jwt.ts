@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-// lib/auth-jwt.ts
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import { verify, JwtPayload } from "jsonwebtoken";
 
 interface UserPayload extends JwtPayload {
@@ -9,7 +5,7 @@ interface UserPayload extends JwtPayload {
   email: string;
   role: string;
   name: string;
-}
+} 
 
 export function verifyJWT(token: string): UserPayload | null {
   try {
@@ -29,17 +25,11 @@ export function extractTokenFromHeader(authHeader: string): string | null {
   return authHeader.substring(7); // Remove 'Bearer ' prefix
 }
 
-<<<<<<< HEAD
 export async function requireAuthJWT(
   req: Request
 ): Promise<UserPayload | Response> {
   const authHeader = req.headers.get("Authorization");
 
-=======
-export async function requireAuthJWT(req: Request): Promise<UserPayload | Response> {
-  const authHeader = req.headers.get("Authorization");
-  
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
   if (!authHeader) {
     return new Response(
       JSON.stringify({ error: "Token de autorización requerido" }),
@@ -50,13 +40,9 @@ export async function requireAuthJWT(req: Request): Promise<UserPayload | Respon
   const token = extractTokenFromHeader(authHeader);
   if (!token) {
     return new Response(
-<<<<<<< HEAD
       JSON.stringify({
         error: "Formato de token inválido. Use: Bearer <token>",
       }),
-=======
-      JSON.stringify({ error: "Formato de token inválido. Use: Bearer <token>" }),
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
       { status: 401 }
     );
   }
@@ -70,8 +56,4 @@ export async function requireAuthJWT(req: Request): Promise<UserPayload | Respon
   }
 
   return user;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4

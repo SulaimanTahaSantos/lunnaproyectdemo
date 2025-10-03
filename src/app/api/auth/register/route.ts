@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-// src/app/api/auth/register/route.ts
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import { prisma } from "../../../../../lib/prisma";
 import { hash } from "bcryptjs";
 
@@ -20,13 +16,9 @@ export async function POST(req: Request) {
 
     if (password.length < 6) {
       return new Response(
-<<<<<<< HEAD
         JSON.stringify({
           error: "La contraseña debe tener al menos 6 caracteres",
         }),
-=======
-        JSON.stringify({ error: "La contraseña debe tener al menos 6 caracteres" }),
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
         { status: 400 }
       );
     }
@@ -76,8 +68,4 @@ export async function POST(req: Request) {
       status: 500,
     });
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4

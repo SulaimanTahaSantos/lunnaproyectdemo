@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-// src/app/api/upload/avatar-local/route.ts
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import { NextRequest } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
 import { writeFile } from "fs/promises";
@@ -24,13 +20,9 @@ export async function POST(req: NextRequest) {
     const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
     if (!allowedTypes.includes(file.type)) {
       return new Response(
-<<<<<<< HEAD
         JSON.stringify({
           error: "Tipo de archivo no permitido. Solo JPG, PNG, WEBP",
         }),
-=======
-        JSON.stringify({ error: "Tipo de archivo no permitido. Solo JPG, PNG, WEBP" }),
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
         { status: 400 }
       );
     }
@@ -50,16 +42,9 @@ export async function POST(req: NextRequest) {
     });
 
     if (!user) {
-<<<<<<< HEAD
       return new Response(JSON.stringify({ error: "Usuario no encontrado" }), {
         status: 404,
       });
-=======
-      return new Response(
-        JSON.stringify({ error: "Usuario no encontrado" }),
-        { status: 404 }
-      );
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
     }
 
     // Convertir archivo a Buffer
@@ -69,11 +54,6 @@ export async function POST(req: NextRequest) {
     // Guardar localmente en public/uploads
     const fileName = `${Date.now()}-${file.name}`;
     const filePath = path.join(process.cwd(), "public/uploads", fileName);
-<<<<<<< HEAD
-
-=======
-    
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
     // Crear directorio si no existe
     const dir = path.dirname(filePath);
     try {
@@ -116,8 +96,4 @@ export async function POST(req: NextRequest) {
       status: 500,
     });
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
