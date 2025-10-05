@@ -2,12 +2,11 @@ import { prisma } from "../../../../../lib/prisma";
 
 export async function POST() {
   try {
-    // Crear usuarios de prueba
     const therapist = await prisma.user.create({
       data: {
         name: "Dr. Ana García",
         email: "therapist@test.com",
-        password: "password123", // En producción esto debería estar hasheado
+        password: "password123", 
         role: "THERAPIST",
       },
     });
@@ -16,7 +15,7 @@ export async function POST() {
       data: {
         name: "Juan Pérez",
         email: "user@test.com",
-        password: "password123", // En producción esto debería estar hasheado
+        password: "password123", 
         role: "USER",
       },
     });

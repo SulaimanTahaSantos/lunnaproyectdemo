@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-// lib/auth.ts
->>>>>>> 1e6016d4c225fa89982a493cbb1f4c7ded7decc4
 import { getServerSession } from "next-auth";
 import { authOptions } from "../src/app/auth/nextauth/route";
 

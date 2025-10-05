@@ -37,4 +37,5 @@ model Session {
 enum Role {
   USER
   THERAPIST
+  ADMIN
 }
