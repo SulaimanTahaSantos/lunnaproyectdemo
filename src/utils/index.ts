@@ -1,16 +1,12 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-/**
- * Merge Tailwind CSS classes with clsx
- */
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/**
- * Format date to human readable format
- */
+
 export function formatDate(date: string | Date, options?: Intl.DateTimeFormatOptions): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   
@@ -24,9 +20,7 @@ export function formatDate(date: string | Date, options?: Intl.DateTimeFormatOpt
   return new Intl.DateTimeFormat('es-ES', defaultOptions).format(dateObj);
 }
 
-/**
- * Format date and time
- */
+
 export function formatDateTime(date: string | Date): string {
   return formatDate(date, {
     year: 'numeric',
@@ -37,9 +31,7 @@ export function formatDateTime(date: string | Date): string {
   });
 }
 
-/**
- * Format time only
- */
+
 export function formatTime(date: string | Date): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   return dateObj.toLocaleTimeString('es-ES', {
@@ -48,9 +40,7 @@ export function formatTime(date: string | Date): string {
   });
 }
 
-/**
- * Get relative time (e.g., "2 hours ago")
- */
+
 export function getRelativeTime(date: string | Date): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   const now = new Date();
@@ -76,18 +66,14 @@ export function getRelativeTime(date: string | Date): string {
   return 'ahora mismo';
 }
 
-/**
- * Capitalize first letter of each word
- */
+
 export function capitalizeWords(str: string): string {
   return str.replace(/\w\S*/g, (txt) => 
     txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
   );
 }
 
-/**
- * Generate initials from name
- */
+
 export function getInitials(name: string): string {
   return name
     .split(' ')
@@ -97,9 +83,7 @@ export function getInitials(name: string): string {
     .slice(0, 2);
 }
 
-/**
- * Format session status for display
- */
+
 export function formatSessionStatus(status: string): string {
   const statusMap = {
     PENDING: 'Pendiente',
@@ -112,9 +96,7 @@ export function formatSessionStatus(status: string): string {
   return statusMap[status as keyof typeof statusMap] || status;
 }
 
-/**
- * Get status color class
- */
+
 export function getStatusColor(status: string): string {
   const colorMap = {
     PENDING: 'bg-yellow-100 text-yellow-800',
@@ -127,9 +109,7 @@ export function getStatusColor(status: string): string {
   return colorMap[status as keyof typeof colorMap] || 'bg-gray-100 text-gray-800';
 }
 
-/**
- * Format role for display
- */
+
 export function formatRole(role: string): string {
   const roleMap = {
     USER: 'Paciente',
@@ -140,24 +120,18 @@ export function formatRole(role: string): string {
   return roleMap[role as keyof typeof roleMap] || role;
 }
 
-/**
- * Validate email format
- */
+
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
 
-/**
- * Generate random ID
- */
+
 export function generateId(): string {
   return Math.random().toString(36).substr(2, 9);
 }
 
-/**
- * Debounce function
- */
+
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   delay: number
@@ -170,9 +144,6 @@ export function debounce<T extends (...args: any[]) => any>(
   };
 }
 
-/**
- * Format file size
- */
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 B';
   
@@ -183,9 +154,7 @@ export function formatFileSize(bytes: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-/**
- * Check if user has permission
- */
+
 export function hasPermission(userRole: string, requiredRole: string | string[]): boolean {
   const hierarchy = ['USER', 'THERAPIST', 'ADMIN'];
   const userRoleIndex = hierarchy.indexOf(userRole);

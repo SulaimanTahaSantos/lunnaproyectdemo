@@ -1,4 +1,3 @@
-// User related types
 export interface User {
   id: string;
   name: string;
@@ -14,7 +13,6 @@ export enum Role {
   ADMIN = 'ADMIN'
 }
 
-// Session related types
 export interface Session {
   id: string;
   date: string;
@@ -35,7 +33,6 @@ export enum SessionStatus {
   CANCELLED = 'CANCELLED'
 }
 
-// Session status log
 export interface SessionStatusLog {
   id: string;
   sessionId: string;
@@ -47,7 +44,6 @@ export interface SessionStatusLog {
   createdAt: string;
 }
 
-// API Response types
 export interface ApiResponse<T = any> {
   message?: string;
   data?: T;
@@ -65,7 +61,6 @@ export interface PaginatedResponse<T> {
   };
 }
 
-// Auth types
 export interface LoginRequest {
   email: string;
   password: string;
@@ -84,7 +79,6 @@ export interface AuthResponse {
   user: User;
 }
 
-// Therapist availability
 export interface TherapistAvailability {
   id: string;
   name: string;
@@ -111,7 +105,6 @@ export interface TimeSlot {
   reason?: string;
 }
 
-// Form types
 export interface SessionCreateRequest {
   userId: string;
   therapistId: string;
