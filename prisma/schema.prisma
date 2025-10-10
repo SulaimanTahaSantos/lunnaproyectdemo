@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(cuid())
-  name              String
-  email             String    @unique
-  password          String
-  role              Role      @default(USER)
-  image             String?
-  therapistSessions Session[] @relation("TherapistSessions")
-  sessions          Session[] @relation("UserSessions")
+  id                   String               @id @default(cuid())
+  name                 String
+  email                String               @unique
+  password             String
+  role                 Role                 @default(USER)
+  image                String?
+  therapistSessions    Session[]            @relation("TherapistSessions")
+  sessions             Session[]            @relation("UserSessions")
+  passwordResetTokens  PasswordResetToken[]
 }
 
 model Session {
@@ -42,6 +43,18 @@ model SessionStatusLog {
   session    Session        @relation(fields: [sessionId], references: [id])
 
   @@map("session_status_logs")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("password_reset_tokens")
 }
 
 enum Role {
