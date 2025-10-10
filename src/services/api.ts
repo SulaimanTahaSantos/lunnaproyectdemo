@@ -1,44 +1,58 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
+// Crear instancia de axios configurada
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
-  timeout: 10000,
+  timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
+// Variable para evitar múltiples redirects
+let isRedirecting = false;
+
+// Interceptor de REQUEST - Agregar token automáticamente
 api.interceptors.request.use(
-  (config) => {
-    
+  (config: InternalAxiosRequestConfig) => {
+    // Solo agregar token si estamos en el cliente
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('lunna_token');
-      if (token) {
+      
+      if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
     }
+    
     return config;
   },
-  (error) => {
+  (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
 
+// Interceptor de RESPONSE - Manejar errores automáticamente
 api.interceptors.response.use(
-  (response) => {
+  (response: AxiosResponse) => {
     return response;
   },
-  (error) => {
+  async (error: AxiosError) => {
+    // Manejar error 401 (No autorizado) - Auto-logout
     if (error.response?.status === 401) {
-      if (typeof window !== 'undefined') {
+      // Evitar múltiples redirects simultáneos
+      if (!isRedirecting && typeof window !== 'undefined') {
+        isRedirecting = true;
+        
+        // Limpiar datos de autenticación
         localStorage.removeItem('lunna_token');
         localStorage.removeItem('lunna_user');
-        window.location.href = '/auth/login';
+        
+        // Redirigir al login
+        setTimeout(() => {
+          window.location.href = '/auth/login?message=session_expired';
+          isRedirecting = false;
+        }, 500);
       }
-    }
-    
-    if (error.code === 'NETWORK_ERROR' || error.code === 'ECONNABORTED') {
-      console.error('Network error or timeout:', error.message);
     }
 
     return Promise.reject(error);
