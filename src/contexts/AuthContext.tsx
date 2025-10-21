@@ -57,31 +57,25 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     initAuth();
   }, []);
 
-  // Efecto para monitorear la expiración del token
   useEffect(() => {
     if (token && isAuthenticated) {
-      // Verificar inmediatamente si el token está expirado
       if (isTokenExpired(token)) {
         logout('expired');
         return;
       }
 
-      // Configurar intervalo para verificar cada 30 segundos
       checkIntervalRef.current = setInterval(() => {
         checkTokenExpiration();
       }, 30000); // 30 segundos
 
-      // Verificar inmediatamente
       checkTokenExpiration();
     } else {
-      // Limpiar intervalo si no hay token
       if (checkIntervalRef.current) {
         clearInterval(checkIntervalRef.current);
         checkIntervalRef.current = null;
       }
     }
 
-    // Cleanup al desmontar o cambiar dependencies
     return () => {
       if (checkIntervalRef.current) {
         clearInterval(checkIntervalRef.current);
@@ -102,7 +96,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setToken(newToken);
       setUser(newUser);
       
-      // Mostrar alerta de login exitoso
       setShowLoginAlert(true);
 
       return response.data;
@@ -136,7 +129,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = (reason?: string) => {
-    // Limpiar el intervalo de verificación
     if (checkIntervalRef.current) {
       clearInterval(checkIntervalRef.current);
       checkIntervalRef.current = null;
@@ -165,7 +157,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // Función para verificar y manejar expiración de token
   const checkTokenExpiration = () => {
     if (!token) return;
 
@@ -175,7 +166,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    // Token válido, continuar con el monitoreo
   };
 
   const refreshUser = async (): Promise<void> => {
