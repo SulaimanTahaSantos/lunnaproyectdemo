@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
+import { ToastProvider } from '@/components/ui/Toast';
 import LoginSuccessAlert from '@/components/auth/LoginSuccessAlert';
 import { ReactNode, useState } from 'react';
 
@@ -34,8 +35,10 @@ export default function Providers({ children }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        {children}
-        <AlertsComponent />
+        <ToastProvider position="top-right" maxToasts={5}>
+          {children}
+          <AlertsComponent />
+        </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
