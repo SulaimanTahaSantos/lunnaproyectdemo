@@ -1,23 +1,23 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enable experimental features
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
 
-  // Environment variables
   env: {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 
-  // Image optimization
   images: {
-    domains: ['localhost', 'lunna-avatars-bucket-sulaiman.s3.amazonaws.com'],
+    domains: [
+      'localhost', 
+      'lunna-avatars-bucket-sulaiman.s3.amazonaws.com',
+      'lunna-avatars-bucket-sulaiman.s3.eu-north-1.amazonaws.com'
+    ],
     formats: ['image/webp', 'image/avif'],
   },
 
-  // API configuration
   async rewrites() {
     return [
       {
@@ -27,7 +27,6 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Headers for CORS and security
   async headers() {
     return [
       {
@@ -41,7 +40,6 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  // Webpack configuration
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
