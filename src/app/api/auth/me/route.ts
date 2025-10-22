@@ -52,3 +52,83 @@ export async function GET(req: Request) {
     });
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const authResult = await requireAuthJWT(req);
+    if (authResult instanceof Response) {
+      return authResult;
+    }
+
+    const body = await req.json();
+    const { name, email, image } = body;
+
+    if (!name || !name.trim()) {
+      return new Response(
+        JSON.stringify({ error: "El nombre es requerido" }),
+        { status: 400 }
+      );
+    }
+
+    if (!email || !email.trim()) {
+      return new Response(
+        JSON.stringify({ error: "El email es requerido" }),
+        { status: 400 }
+      );
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ error: "Formato de email inválido" }),
+        { status: 400 }
+      );
+    }
+
+    if (email !== authResult.email) {
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          email,
+          id: { not: authResult.userId }
+        }
+      });
+
+      if (existingUser) {
+        return new Response(
+          JSON.stringify({ error: "Este email ya está en uso" }),
+          { status: 409 }
+        );
+      }
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: authResult.userId },
+      data: {
+        name: name.trim(),
+        email: email.trim(),
+        ...(image !== undefined && { image })
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        image: true
+      }
+    });
+
+    return new Response(
+      JSON.stringify({
+        message: "Perfil actualizado correctamente",
+        user: updatedUser
+      }),
+      { status: 200 }
+    );
+  } catch (err: any) {
+    console.error("Error al actualizar perfil:", err);
+    return new Response(
+      JSON.stringify({ error: "Error interno del servidor" }),
+      { status: 500 }
+    );
+  }
+}
