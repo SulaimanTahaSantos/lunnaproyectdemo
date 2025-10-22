@@ -33,8 +33,11 @@ export default function ProfilePage() {
   
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [errors, setErrors] = useState<Partial<PersonalInfo>>({});
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>({
     name: user?.name || '',
@@ -138,21 +141,93 @@ export default function ProfilePage() {
     setIsEditing(false);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setProfileImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file || !user) return;
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+    if (!allowedTypes.includes(file.type)) {
+      setErrorMessage('Tipo de archivo no permitido. Solo JPG, PNG, WEBP');
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setErrorMessage('El archivo es demasiado grande. Máximo 5MB');
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+      return;
+    }
+
+    setIsUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('userId', user.id);
+
+      const response = await api.post('/upload/avatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const { imageUrl, user: updatedUser } = response.data;
+
+      setProfileImage(imageUrl);
+      updateUser(updatedUser);
+
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      
+      let errorMsg = 'Error al subir la imagen';
+      if (error.response?.data?.error) {
+        errorMsg = error.response.data.error;
+      }
+      
+      setErrorMessage(errorMsg);
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
-  const handleImageRemove = () => {
-    setProfileImage('/api/placeholder/150/150');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+  const handleImageRemove = async () => {
+    if (!user) return;
+
+    setIsUploadingImage(true);
+    try {
+      const response = await api.put('/auth/me', {
+        name: user.name,
+        email: user.email,
+        image: null 
+      });
+
+      const updatedUser = response.data.user;
+      
+      setProfileImage('/api/placeholder/150/150');
+      updateUser(updatedUser);
+
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error: any) {
+      console.error('Error removing image:', error);
+      
+      setErrorMessage('Error al eliminar la imagen');
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+    } finally {
+      setIsUploadingImage(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -182,6 +257,15 @@ export default function ProfilePage() {
             <Check className="h-5 w-5 text-green-600" />
             <span className="text-green-800 font-medium">
               Perfil actualizado correctamente
+            </span>
+          </div>
+        )}
+
+        {showError && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center space-x-3">
+            <AlertCircle className="h-5 w-5 text-red-600" />
+            <span className="text-red-800 font-medium">
+              {errorMessage}
             </span>
           </div>
         )}
@@ -228,18 +312,26 @@ export default function ProfilePage() {
           <div className="flex items-center space-x-6 mb-8">
             <div className="relative">
               <div className="w-32 h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-white shadow-lg">
-                <Image
-                  src={profileImage}
-                  alt="Foto de perfil"
-                  width={128}
-                  height={128}
-                  className="w-full h-full object-cover"
-                />
+                {isUploadingImage ? (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  </div>
+                ) : (
+                  <Image
+                    src={profileImage}
+                    alt="Foto de perfil"
+                    width={128}
+                    height={128}
+                    className="w-full h-full object-cover"
+                  />
+                )}
               </div>
-              {isEditing && (
+              {!isUploadingImage && (
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute -bottom-2 -right-2 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
+                  disabled={isUploadingImage}
+                  className="absolute -bottom-2 -right-2 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50 shadow-lg"
+                  title="Cambiar foto de perfil"
                 >
                   <Camera className="h-4 w-4" />
                 </button>
@@ -256,24 +348,28 @@ export default function ProfilePage() {
                  user.role === 'ADMIN' ? 'Administrador' : 'Usuario'}
               </p>
               
-              {isEditing && (
-                <div className="flex space-x-3">
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors"
-                  >
-                    <Upload className="h-4 w-4" />
-                    <span className="text-sm">Cambiar foto</span>
-                  </button>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploadingImage}
+                  className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Upload className="h-4 w-4" />
+                  <span className="text-sm">
+                    {isUploadingImage ? 'Subiendo...' : 'Cambiar foto'}
+                  </span>
+                </button>
+                {profileImage !== '/api/placeholder/150/150' && (
                   <button
                     onClick={handleImageRemove}
-                    className="flex items-center space-x-2 text-red-600 hover:text-red-700 transition-colors"
+                    disabled={isUploadingImage}
+                    className="flex items-center space-x-2 text-red-600 hover:text-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Trash2 className="h-4 w-4" />
                     <span className="text-sm">Eliminar</span>
                   </button>
-                </div>
-              )}
+                )}
+              </div>
             </div>
             
             <input
@@ -371,29 +467,6 @@ export default function ProfilePage() {
                 </span>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">
-            Acciones Rápidas
-          </h3>
-          
-          <div className="grid md:grid-cols-3 gap-4">
-            <button className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors">
-              <Bell className="h-5 w-5 text-blue-600" />
-              <span className="text-gray-900">Configurar Notificaciones</span>
-            </button>
-            
-            <button className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-green-300 hover:bg-green-50 transition-colors">
-              <Shield className="h-5 w-5 text-green-600" />
-              <span className="text-gray-900">Privacidad y Seguridad</span>
-            </button>
-            
-            <button className="flex items-center space-x-3 p-4 bg-white rounded-lg border border-gray-200 hover:border-purple-300 hover:bg-purple-50 transition-colors">
-              <Settings className="h-5 w-5 text-purple-600" />
-              <span className="text-gray-900">Configuración Avanzada</span>
-            </button>
           </div>
         </div>
       </div>
