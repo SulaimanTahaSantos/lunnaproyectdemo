@@ -8,7 +8,6 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Verificar autenticación
     const authResult = await requireAuthJWT(request);
     if (authResult instanceof NextResponse || authResult instanceof Response) {
       return authResult;
@@ -26,7 +25,6 @@ export async function PUT(
       );
     }
 
-    // Buscar la sesión
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
     });
@@ -38,7 +36,6 @@ export async function PUT(
       );
     }
 
-    // Verificar permisos (solo terapeuta o admin pueden actualizar)
     const canUpdate = 
       session.therapistId === userId ||
       role === 'ADMIN';
@@ -50,7 +47,6 @@ export async function PUT(
       );
     }
 
-    // Validar el estado
     const validStatuses: SessionStatus[] = ['PENDING', 'CONFIRMED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'];
     if (!validStatuses.includes(status)) {
       return NextResponse.json(
@@ -59,7 +55,6 @@ export async function PUT(
       );
     }
 
-    // Actualizar la sesión
     const updatedSession = await prisma.session.update({
       where: { id: sessionId },
       data: {
@@ -85,7 +80,6 @@ export async function PUT(
       },
     });
 
-    // Crear log de cambio de estado (si existe la tabla SessionStatusLog)
     try {
       await prisma.sessionStatusLog.create({
         data: {
@@ -98,7 +92,6 @@ export async function PUT(
         },
       });
     } catch (error) {
-      // Ignorar si la tabla no existe
       console.log('SessionStatusLog table might not exist:', error);
     }
 

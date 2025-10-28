@@ -237,7 +237,6 @@ function SessionDetailContent() {
         </div>
       </div>
 
-      {/* Acciones */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Acciones

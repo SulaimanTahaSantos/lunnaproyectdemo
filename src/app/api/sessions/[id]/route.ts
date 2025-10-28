@@ -7,7 +7,6 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Verificar autenticación
     const authResult = await requireAuthJWT(request);
     if (authResult instanceof NextResponse || authResult instanceof Response) {
       return authResult;
@@ -16,7 +15,6 @@ export async function GET(
 
     const sessionId = params.id;
 
-    // Buscar la sesión
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
       include: {
@@ -46,7 +44,6 @@ export async function GET(
       );
     }
 
-    // Verificar que el usuario tenga acceso a esta sesión
     const hasAccess = 
       session.userId === userId || 
       session.therapistId === userId ||
@@ -74,7 +71,6 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Verificar autenticación
     const authResult = await requireAuthJWT(request);
     if (authResult instanceof NextResponse || authResult instanceof Response) {
       return authResult;
@@ -84,7 +80,6 @@ export async function PUT(
     const sessionId = params.id;
     const body = await request.json();
 
-    // Buscar la sesión
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
     });
@@ -96,7 +91,6 @@ export async function PUT(
       );
     }
 
-    // Verificar permisos (solo terapeuta o admin pueden actualizar)
     const canUpdate = 
       session.therapistId === userId ||
       role === 'ADMIN';
@@ -108,7 +102,6 @@ export async function PUT(
       );
     }
 
-    // Actualizar la sesión
     const updatedSession = await prisma.session.update({
       where: { id: sessionId },
       data: {

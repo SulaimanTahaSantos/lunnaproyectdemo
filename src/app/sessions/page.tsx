@@ -146,7 +146,6 @@ function SessionsContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           Mis Sesiones
@@ -158,10 +157,8 @@ function SessionsContent() {
         </p>
       </div>
 
-      {/* Barra de búsqueda y filtros */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
         <div className="flex flex-col lg:flex-row gap-4">
-          {/* Búsqueda */}
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -175,7 +172,6 @@ function SessionsContent() {
             </div>
           </div>
 
-          {/* Filtro por estado */}
           <div className="flex gap-2">
             <select
               value={statusFilter}
@@ -190,7 +186,6 @@ function SessionsContent() {
               <option value="CANCELLED">Cancelada</option>
             </select>
 
-            {/* Botón limpiar filtros */}
             {hasActiveFilters && (
               <Button
                 variant="outline"
@@ -203,7 +198,6 @@ function SessionsContent() {
             )}
           </div>
 
-          {/* Toggle vista */}
           <div className="flex gap-2 border border-gray-300 rounded-lg p-1">
             <button
               onClick={() => setViewMode('cards')}
@@ -228,7 +222,6 @@ function SessionsContent() {
           </div>
         </div>
 
-        {/* Indicador de resultados */}
         <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
           <span>
             Mostrando {paginatedSessions.length} de {filteredSessions.length} sesiones
@@ -241,7 +234,6 @@ function SessionsContent() {
         </div>
       </div>
 
-      {/* Contenido */}
       {isLoading ? (
         <div className="text-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
@@ -276,7 +268,6 @@ function SessionsContent() {
         <SessionsTable sessions={paginatedSessions} userRole={user?.role} />
       )}
 
-      {/* Paginación */}
       {totalPages > 1 && (
         <div className="mt-8 flex items-center justify-center gap-2">
           <Button
@@ -320,7 +311,6 @@ function SessionsContent() {
   );
 }
 
-// Componente para vista de cards
 function SessionsCards({ sessions, userRole }: { sessions: Session[]; userRole?: string }) {
   const router = useRouter();
 
