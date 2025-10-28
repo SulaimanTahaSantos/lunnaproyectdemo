@@ -98,7 +98,6 @@ function SessionDetailContent() {
   };
 
   const getSessionDuration = () => {
-    // Duración típica de sesión: 50 minutos
     return '50 minutos';
   };
 
